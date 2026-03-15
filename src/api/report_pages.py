@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, BackgroundTasks, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
 from src.api.schemas import (
     GenerateJsonRequest,
@@ -16,6 +16,73 @@ from src.services.page_generation import PageGenerationService
 from src.services.json_generation import JsonGenerationService
 
 router = APIRouter(prefix="/api/report-pages", tags=["report-pages"])
+
+
+@router.get("/")
+async def list_pages(repo: Repository = Depends(get_repository)):
+    """List all report pages (for dashboard)."""
+    from sqlalchemy import select
+    from src.models.report_page import ReportPage
+
+    result = await repo.session.execute(
+        select(ReportPage).order_by(ReportPage.page_order)
+    )
+    pages = result.scalars().all()
+    return [
+        {
+            "id": str(p.id),
+            "report_id": str(p.report_id),
+            "page_order": p.page_order,
+            "generation_status": p.generation_status,
+            "json_status": p.json_status,
+            "overall": p.overall,
+            "generation_completed_at": p.generation_completed_at.isoformat() if p.generation_completed_at else None,
+        }
+        for p in pages
+    ]
+
+
+@router.get("/{page_id}/detail")
+async def get_page_detail(
+    page_id: uuid.UUID,
+    repo: Repository = Depends(get_repository),
+):
+    """Full page detail including all content fields."""
+    page = await repo.get_report_page(page_id)
+    if page is None:
+        raise HTTPException(status_code=404, detail="Report page not found")
+
+    return {
+        "id": str(page.id),
+        "report_id": str(page.report_id),
+        "page_order": page.page_order,
+        "generation_status": page.generation_status,
+        "json_status": page.json_status,
+        "generation_run_id": str(page.generation_run_id) if page.generation_run_id else None,
+        "json_run_id": str(page.json_run_id) if page.json_run_id else None,
+        "content_generator_model": page.content_generator_model,
+        "generation_started_at": page.generation_started_at.isoformat() if page.generation_started_at else None,
+        "generation_completed_at": page.generation_completed_at.isoformat() if page.generation_completed_at else None,
+        "last_error_code": page.last_error_code,
+        "last_error_message": page.last_error_message,
+        # Narrative content
+        "raw_report": page.raw_report,
+        "raw_report_id": page.raw_report_id,
+        "raw_report_jp": page.raw_report_jp,
+        "page_summary": page.page_summary,
+        # Scores
+        "overall": page.overall,
+        "outline_alignment": page.outline_alignment,
+        "writing_alignment": page.writing_alignment,
+        "analysis_score": page.analysis_score,
+        "notes": page.notes,
+        # Structured data
+        "validation_report": page.validation_report,
+        "extracted_data": page.extracted_data,
+        "en_content": page.en_content,
+        "id_content": page.id_content,
+        "ja_content": page.ja_content,
+    }
 
 
 @router.post("/{page_id}/generate", response_model=GenerateResponse)
@@ -80,7 +147,6 @@ async def get_page_status(
 ):
     page = await repo.get_report_page(page_id)
     if page is None:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Report page not found")
 
     return PageStatusResponse(

@@ -1,9 +1,13 @@
 from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from src.core.logging import setup_logging
+
+UI_DIR = Path(__file__).parent / "ui"
 
 
 @asynccontextmanager
@@ -20,9 +24,17 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # API routes
     from src.api.router import api_router
-
     app.include_router(api_router)
+
+    # UI routes (HTML pages)
+    from src.ui.routes import router as ui_router
+    app.include_router(ui_router)
+
+    # Static files (JS, CSS)
+    app.mount("/static", StaticFiles(directory=str(UI_DIR / "static")), name="static")
+
     return app
 
 

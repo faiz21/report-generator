@@ -13,6 +13,27 @@ from src.services.json_generation import JsonGenerationService
 router = APIRouter(prefix="/api/reports", tags=["reports"])
 
 
+@router.get("/{report_id}/pages")
+async def list_report_pages(
+    report_id: uuid.UUID,
+    repo: Repository = Depends(get_repository),
+):
+    """List all pages for a specific report."""
+    pages = await repo.get_report_pages_by_report(report_id)
+    return [
+        {
+            "id": str(p.id),
+            "report_id": str(p.report_id),
+            "page_order": p.page_order,
+            "generation_status": p.generation_status,
+            "json_status": p.json_status,
+            "overall": p.overall,
+            "generation_completed_at": p.generation_completed_at.isoformat() if p.generation_completed_at else None,
+        }
+        for p in pages
+    ]
+
+
 @router.post("/{report_id}/generate-pages", response_model=BatchGenerateResponse)
 async def generate_all_pages(
     report_id: uuid.UUID,
