@@ -1,0 +1,104 @@
+models:
+  generator:
+    COST_EFFECTIVE:
+      A: "google/gemini-2.0-flash"
+      B: "openai/gpt-4o-mini"
+      C: "anthropic/claude-3.5-haiku"
+    OPTIMAL:
+      A: "openai/gpt-4o"
+      B: "anthropic/claude-sonnet-4-20250514"
+      C: "google/gemini-2.0-pro"
+    TOP_GRADE:
+      A: "anthropic/claude-opus-4-20250514"
+      B: "openai/o1"
+      C: "google/gemini-2.5-pro"
+
+  validator:
+    COST_EFFECTIVE:
+      A: "google/gemini-2.0-flash"
+      B: "openai/gpt-4o-mini"
+      C: "anthropic/claude-3.5-haiku"
+    OPTIMAL:
+      A: "openai/gpt-4o"
+      B: "anthropic/claude-sonnet-4-20250514"
+      C: "google/gemini-2.0-pro"
+    TOP_GRADE:
+      A: "anthropic/claude-opus-4-20250514"
+      B: "openai/o1"
+      C: "google/gemini-2.5-pro"
+
+  refiner:
+    COST_EFFECTIVE:
+      A: "google/gemini-2.0-flash"
+      B: "openai/gpt-4o-mini"
+      C: "anthropic/claude-3.5-haiku"
+    OPTIMAL:
+      A: "openai/gpt-4o"
+      B: "anthropic/claude-sonnet-4-20250514"
+      C: "google/gemini-2.0-pro"
+    TOP_GRADE:
+      A: "anthropic/claude-opus-4-20250514"
+      B: "openai/o1"
+      C: "google/gemini-2.5-pro"
+
+  translator:
+    COST_EFFECTIVE:
+      A: "google/gemini-2.0-flash"
+      B: "openai/gpt-4o-mini"
+      C: "anthropic/claude-3.5-haiku"
+    OPTIMAL:
+      A: "openai/gpt-4o"
+      B: "anthropic/claude-sonnet-4-20250514"
+      C: "google/gemini-2.0-pro"
+    TOP_GRADE:
+      A: "anthropic/claude-opus-4-20250514"
+      B: "openai/o1"
+      C: "google/gemini-2.5-pro"
+
+  analyzer:
+    COST_EFFECTIVE:
+      A: "google/gemini-2.0-flash"
+      B: "openai/gpt-4o-mini"
+      C: "anthropic/claude-3.5-haiku"
+    OPTIMAL:
+      A: "openai/gpt-4o"
+      B: "anthropic/claude-sonnet-4-20250514"
+      C: "google/gemini-2.0-pro"
+    TOP_GRADE:
+      A: "anthropic/claude-opus-4-20250514"
+      B: "openai/o1"
+      C: "google/gemini-2.5-pro"
+
+  json_generator:
+    COST_EFFECTIVE:
+      A: "google/gemini-2.0-flash"
+      B: "openai/gpt-4o-mini"
+      C: "anthropic/claude-3.5-haiku"
+    OPTIMAL:
+      A: "openai/gpt-4o"
+      B: "anthropic/claude-sonnet-4-20250514"
+      C: "google/gemini-2.0-pro"
+    TOP_GRADE:
+      A: "anthropic/claude-opus-4-20250514"
+      B: "openai/o1"
+      C: "google/gemini-2.5-pro"
+
+defaults:
+  generator:
+    temperature: 0.7
+    max_tokens: 8000
+  validator:
+    temperature: 0.3
+    max_tokens: 4000
+  refiner:
+    temperature: 0.5
+    max_tokens: 8000
+  translator:
+    temperature: 0.3
+    max_tokens: 8000
+  analyzer:
+    temperature: 0.3
+    max_tokens: 4000
+  json_generator:
+    temperature: 0.2
+    max_tokens: 8000

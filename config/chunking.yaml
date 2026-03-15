@@ -1,0 +1,27 @@
+strategy: "markdown_recursive"
+
+markdown_headers:
+  - level: 1
+    split: true
+  - level: 2
+    split: true
+  - level: 3
+    split: false
+
+recursive:
+  chunk_size: 1500
+  chunk_overlap: 200
+  separators:
+    - "\n## "
+    - "\n### "
+    - "\n\n"
+    - "\n"
+    - ". "
+
+metadata_fields:
+  - plant_code
+  - plant_name
+  - report_type
+  - page_type
+  - page_key
+  - doc_type
